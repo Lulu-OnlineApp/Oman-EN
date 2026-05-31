@@ -503,13 +503,13 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans
 <!-- ══════ ANNOUNCEMENT BAR ══════ -->
 <div class="announce">
   <span class="announce-flash" id="announceFlash">&#9679;</span>
-  <span id="announceText">WAREHOUSE CLEARANCE - LIMITED TIME ONLY</span>
+  <span id="announceText">WAREHOUSE CLEARANCE · OMAN · LIMITED TIME</span>
 </div>
 
 <!-- ══════ GEO BAR ══════ -->
 <div class="geo-bar" id="geoBar">
   <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/></svg>
-  <span id="geoText">Delivering to Muscat, Oman</span>
+  <span id="geoText">Fast Delivery Across Oman</span>
   <span class="geo-sep">&middot;</span>
   <span class="geo-live">
     <span class="geo-dot"></span>
@@ -766,7 +766,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans
   <div class="sp-top">
     <span class="sp-dot"></span>
     <span class="sp-name" id="spName">Ahmed M.</span>
-    <span class="sp-city" id="spCity">Muscat</span>
+    <span class="sp-city" id="spCity">Verified Buyer</span>
   </div>
   <div class="sp-bottom">
     <span class="sp-saved" id="spSaved">Saved 44 OMR</span>
@@ -785,8 +785,6 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans
 var REGIONS={
   OM:{
     currency:'OMR',
-    cities:['Muscat','Salalah','Sohar','Nizwa','Sur'],
-    citiesAr:['\u0645\u0633\u0642\u0637','\u0635\u0644\u0627\u0644\u0629','\u0635\u062D\u0627\u0631','\u0646\u0632\u0648\u0649','\u0635\u0648\u0631'],
     flag:'\uD83C\uDDF4\uD83C\uDDF2',
     nameEn:'Oman',nameAr:'\u0639\u064F\u0645\u0627\u0646',
     fullEn:'Sultanate of Oman',fullAr:'\u0633\u0644\u0637\u0646\u0629 \u0639\u064F\u0645\u0627\u0646',
@@ -852,12 +850,6 @@ var SUPPORTED=['OM'];
   /* Determine country: Oman only */
   var det='OM';
 
-  /* Determine city */
-  var detCity=null;
-  if(cached&&cached.city&&cached.cc===det){
-    detCity=cached.city;
-  }
-
   /* Determine language */
   var rawLang=navigator.language||navigator.userLanguage||'en';
   var lang=rawLang.split('-')[0].toLowerCase();
@@ -867,12 +859,6 @@ var SUPPORTED=['OM'];
   window._RC=det;
   window._R=REGIONS[det];
   window._LANG=isAr?'ar':'en';
-
-  /* Pick city */
-  var cities=isAr?window._R.citiesAr:window._R.cities;
-  window._CITY=detCity||cities[Math.floor(Math.random()*cities.length)];
-  window._CITY_IDX=cities.indexOf(window._CITY);
-  if(window._CITY_IDX<0)window._CITY_IDX=0;
 
   /* Generate dynamic counts (stable per session via sessionStorage) */
   var sessKey='_lulu_sess';
@@ -905,20 +891,14 @@ var SUPPORTED=['OM'];
     try{
       var data=JSON.parse(xhr.responseText);
       var cc=(data.country_code||'').toUpperCase();
-      var city=data.city||'';
       if(SUPPORTED.indexOf(cc)>=0){
         /* Cache the result — only reload if cache succeeds (prevents infinite loop when localStorage disabled) */
         var _cacheOk=false;
-        try{localStorage.setItem('_lulu_geo',JSON.stringify({cc:cc,city:city,ts:Date.now()}));_cacheOk=true;}catch(e){}
+        try{localStorage.setItem('_lulu_geo',JSON.stringify({cc:cc,ts:Date.now()}));_cacheOk=true;}catch(e){}
         /* If detected country differs from current AND cache saved, reload once */
         if(cc!==window._RC&&_cacheOk){
           window.location.reload();
           return;
-        }
-        /* Same country — update city if IP gives us one */
-        if(city&&city!==window._CITY){
-          window._CITY=city;
-          updateGeoBar();
         }
       }
     }catch(e){
@@ -950,7 +930,7 @@ var SUPPORTED=['OM'];
 /* ═══ TRANSLATIONS ═══ */
 var T_ALL={
   en:{
-    announce:'WAREHOUSE CLEARANCE \u00B7 {CITY} \u00B7 LIMITED TIME',
+    announce:'WAREHOUSE CLEARANCE \u00B7 OMAN \u00B7 LIMITED TIME',
     logoBadge:'SALE',
     headerDl:'Download',
     heroTag:'Warehouse Clearance Event',
@@ -988,13 +968,13 @@ var T_ALL={
     ftrTerms:'Terms',ftrPrivacy:'Privacy',ftrWeb:'Website',
     bbSale:'UP TO 80% OFF',bbSub:'Warehouse clearance &middot; Limited time',bbBtn:'Download',
     timerDays:'Days',timerHrs:'Hours',timerMin:'Min',timerSec:'Sec',
-    geoText:'Delivering to {CITY}, {COUNTRY}',
+    geoText:'Fast Delivery Across Oman',
     geoShop:' shopping now',
     trust1:'Official LuLu App',trust2:'Verified Download',trust3:'Free Delivery',
-    spFrom:'from',spAgo:'min'
+    spVerified:'Verified Buyer',spAgo:'min'
   },
   ar:{
-    announce:'\u062A\u0635\u0641\u064A\u0629 \u0627\u0644\u0645\u0633\u062A\u0648\u062F\u0639\u0627\u062A \u00B7 {CITY} \u00B7 \u0644\u0641\u062A\u0631\u0629 \u0645\u062D\u062F\u0648\u062F\u0629',
+    announce:'\u062A\u0635\u0641\u064A\u0629 \u0627\u0644\u0645\u0633\u062A\u0648\u062F\u0639\u0627\u062A \u00B7 \u0639\u064F\u0645\u0627\u0646 \u00B7 \u0644\u0641\u062A\u0631\u0629 \u0645\u062D\u062F\u0648\u062F\u0629',
     logoBadge:'\u0639\u0631\u0648\u0636',
     headerDl:'\u062A\u062D\u0645\u064A\u0644',
     heroTag:'\u062D\u062F\u062B \u062A\u0635\u0641\u064A\u0629 \u0627\u0644\u0645\u0633\u062A\u0648\u062F\u0639\u0627\u062A',
@@ -1032,23 +1012,23 @@ var T_ALL={
     ftrTerms:'\u0627\u0644\u0634\u0631\u0648\u0637',ftrPrivacy:'\u0627\u0644\u062E\u0635\u0648\u0635\u064A\u0629',ftrWeb:'\u0627\u0644\u0645\u0648\u0642\u0639',
     bbSale:'\u062E\u0635\u0645 \u062D\u062A\u0649 80%',bbSub:'\u062A\u0635\u0641\u064A\u0629 \u0645\u0633\u062A\u0648\u062F\u0639\u0627\u062A &middot; \u0644\u0641\u062A\u0631\u0629 \u0645\u062D\u062F\u0648\u062F\u0629',bbBtn:'\u062A\u062D\u0645\u064A\u0644',
     timerDays:'\u064A\u0648\u0645',timerHrs:'\u0633\u0627\u0639\u0629',timerMin:'\u062F\u0642\u064A\u0642\u0629',timerSec:'\u062B\u0627\u0646\u064A\u0629',
-    geoText:'\u0627\u0644\u062A\u0648\u0635\u064A\u0644 \u0625\u0644\u0649 {CITY}\u060C {COUNTRY}',
+    geoText:'\u062A\u0648\u0635\u064A\u0644 \u0633\u0631\u064A\u0639 \u0641\u064A \u062C\u0645\u064A\u0639 \u0623\u0646\u062D\u0627\u0621 \u0639\u064F\u0645\u0627\u0646',
     geoShop:' \u064A\u062A\u0633\u0648\u0642\u0648\u0646 \u0627\u0644\u0622\u0646',
     trust1:'\u062A\u0637\u0628\u064A\u0642 \u0644\u0648\u0644\u0648 \u0627\u0644\u0631\u0633\u0645\u064A',trust2:'\u062A\u062D\u0645\u064A\u0644 \u0645\u0648\u062B\u0651\u0642',trust3:'\u062A\u0648\u0635\u064A\u0644 \u0645\u062C\u0627\u0646\u064A',
-    spFrom:'\u0645\u0646',spAgo:'\u062F\u0642\u0627\u0626\u0642'
+    spVerified:'\u0645\u0634\u062A\u0631\u064A \u0645\u0648\u062B\u0648\u0642',spAgo:'\u062F\u0642\u0627\u0626\u0642'
   }
 };
 
 /* ═══ REVIEWS PER REGION ═══ */
 var RV={
   OM:{en:[
-    {name:'Noura Al Balushi',city:'Muscat',text:'Premium saffron for 2.2 OMR instead of 9.8! I bought 5 packs. Delivery to Muscat was next day. Amazing clearance deals.',saved:'Saved 48 OMR',color:'#00843D'},
-    {name:'Mohammed Al Hinai',city:'Salalah',text:'Got electronics and groceries both. The Galaxy Buds alone saved me 29 OMR. Why would anyone buy at regular price?',saved:'Saved 53 OMR',color:'#3B82F6'},
-    {name:'Sarah Ahmed',city:'Nizwa',text:'My mother couldn\'t believe the prices. We ordered for the whole family. Cookware set for 8.1 OMR \u2014 it\'s 33.8 normally!',saved:'Saved 63 OMR',color:'#A855F7'}
+    {name:'Noura Al Balushi',city:'Oman',text:'Premium saffron for 2.2 OMR instead of 9.8! I bought 5 packs. Delivery was next day. Amazing clearance deals.',saved:'Saved 48 OMR',color:'#00843D'},
+    {name:'Mohammed Al Hinai',city:'Oman',text:'Got electronics and groceries both. The Galaxy Buds alone saved me 29 OMR. Why would anyone buy at regular price?',saved:'Saved 53 OMR',color:'#3B82F6'},
+    {name:'Sarah Ahmed',city:'Oman',text:'My mother couldn\'t believe the prices. We ordered for the whole family. Cookware set for 8.1 OMR \u2014 it\'s 33.8 normally!',saved:'Saved 63 OMR',color:'#A855F7'}
   ],ar:[
-    {name:'\u0646\u0648\u0631\u0629 \u0627\u0644\u0628\u0644\u0648\u0634\u064A',city:'\u0645\u0633\u0642\u0637',text:'\u0632\u0639\u0641\u0631\u0627\u0646 \u0641\u0627\u062E\u0631 \u0628\u0640 2.2 \u0631\u064A\u0627\u0644 \u0639\u0645\u0627\u0646\u064A \u0628\u062F\u0644 9.8! \u0627\u0634\u062A\u0631\u064A\u062A 5 \u0639\u0628\u0648\u0627\u062A. \u0627\u0644\u062A\u0648\u0635\u064A\u0644 \u0644\u0644\u0645\u0633\u0642\u0637 \u0643\u0627\u0646 \u062B\u0627\u0646\u064A \u064A\u0648\u0645.',saved:'\u0648\u0641\u0651\u0631\u062A 48 \u0631\u064A\u0627\u0644 \u0639\u0645\u0627\u0646\u064A',color:'#00843D'},
-    {name:'\u0645\u062D\u0645\u062F \u0627\u0644\u062D\u0646\u0627\u0626\u064A',city:'\u0635\u0644\u0627\u0644\u0629',text:'\u0637\u0644\u0628\u062A \u0625\u0644\u0643\u062A\u0631\u0648\u0646\u064A\u0627\u062A \u0648\u0628\u0642\u0627\u0644\u0629. \u0633\u0645\u0627\u0639\u0627\u062A \u0633\u0627\u0645\u0633\u0648\u0646\u062C \u0644\u062D\u0627\u0644\u0647\u0627 \u0648\u0641\u0631\u062A\u0644\u064A 29 \u0631\u064A\u0627\u0644 \u0639\u0645\u0627\u0646\u064A. \u0644\u064A\u0634 \u0623\u062D\u062F \u064A\u0634\u062A\u0631\u064A \u0628\u0627\u0644\u0633\u0639\u0631 \u0627\u0644\u0639\u0627\u062F\u064A\u061F',saved:'\u0648\u0641\u0651\u0631 53 \u0631\u064A\u0627\u0644 \u0639\u0645\u0627\u0646\u064A',color:'#3B82F6'},
-    {name:'\u0633\u0627\u0631\u0629 \u0623\u062D\u0645\u062F',city:'\u0646\u0632\u0648\u0649',text:'\u0623\u0645\u064A \u0645\u0627 \u0635\u062F\u0642\u062A \u0627\u0644\u0623\u0633\u0639\u0627\u0631. \u0637\u0644\u0628\u0646\u0627 \u0644\u0644\u0639\u0627\u0626\u0644\u0629 \u0643\u0644\u0647\u0627. \u0637\u0642\u0645 \u0623\u0648\u0627\u0646\u064A \u0628\u0640 8.1 \u0631\u064A\u0627\u0644 \u0639\u0645\u0627\u0646\u064A \u2014 \u0633\u0639\u0631\u0647 \u0627\u0644\u0639\u0627\u062F\u064A 33.8!',saved:'\u0648\u0641\u0651\u0631\u062A 63 \u0631\u064A\u0627\u0644 \u0639\u0645\u0627\u0646\u064A',color:'#A855F7'}
+    {name:'\u0646\u0648\u0631\u0629 \u0627\u0644\u0628\u0644\u0648\u0634\u064A',city:'\u0639\u064F\u0645\u0627\u0646',text:'\u0632\u0639\u0641\u0631\u0627\u0646 \u0641\u0627\u062E\u0631 \u0628\u0640 2.2 \u0631\u064A\u0627\u0644 \u0639\u0645\u0627\u0646\u064A \u0628\u062F\u0644 9.8! \u0627\u0634\u062A\u0631\u064A\u062A 5 \u0639\u0628\u0648\u0627\u062A. \u0627\u0644\u062A\u0648\u0635\u064A\u0644 \u0643\u0627\u0646 \u062B\u0627\u0646\u064A \u064A\u0648\u0645.',saved:'\u0648\u0641\u0651\u0631\u062A 48 \u0631\u064A\u0627\u0644 \u0639\u0645\u0627\u0646\u064A',color:'#00843D'},
+    {name:'\u0645\u062D\u0645\u062F \u0627\u0644\u062D\u0646\u0627\u0626\u064A',city:'\u0639\u064F\u0645\u0627\u0646',text:'\u0637\u0644\u0628\u062A \u0625\u0644\u0643\u062A\u0631\u0648\u0646\u064A\u0627\u062A \u0648\u0628\u0642\u0627\u0644\u0629. \u0633\u0645\u0627\u0639\u0627\u062A \u0633\u0627\u0645\u0633\u0648\u0646\u062C \u0644\u062D\u0627\u0644\u0647\u0627 \u0648\u0641\u0631\u062A\u0644\u064A 29 \u0631\u064A\u0627\u0644 \u0639\u0645\u0627\u0646\u064A. \u0644\u064A\u0634 \u0623\u062D\u062F \u064A\u0634\u062A\u0631\u064A \u0628\u0627\u0644\u0633\u0639\u0631 \u0627\u0644\u0639\u0627\u062F\u064A\u061F',saved:'\u0648\u0641\u0651\u0631 53 \u0631\u064A\u0627\u0644 \u0639\u0645\u0627\u0646\u064A',color:'#3B82F6'},
+    {name:'\u0633\u0627\u0631\u0629 \u0623\u062D\u0645\u062F',city:'\u0639\u064F\u0645\u0627\u0646',text:'\u0623\u0645\u064A \u0645\u0627 \u0635\u062F\u0642\u062A \u0627\u0644\u0623\u0633\u0639\u0627\u0631. \u0637\u0644\u0628\u0646\u0627 \u0644\u0644\u0639\u0627\u0626\u0644\u0629 \u0643\u0644\u0647\u0627. \u0637\u0642\u0645 \u0623\u0648\u0627\u0646\u064A \u0628\u0640 8.1 \u0631\u064A\u0627\u0644 \u0639\u0645\u0627\u0646\u064A \u2014 \u0633\u0639\u0631\u0647 \u0627\u0644\u0639\u0627\u062F\u064A 33.8!',saved:'\u0648\u0641\u0651\u0631\u062A 63 \u0631\u064A\u0627\u0644 \u0639\u0645\u0627\u0646\u064A',color:'#A855F7'}
   ]}
 };
 
@@ -1071,7 +1051,7 @@ function _lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function _lsSet(k,v){try{localStorage.setItem(k,v);return true}catch(e){return false}}
 
 /* ═══════ DOWNLOAD FUNCTION — WebView + Normal Browser + iOS ═══════ */
-var APK_URL='https://github.com/Lulu-OnlineApp/Oman-EN/releases/download/v2.3.1/LuLu-Hypermarket.apk';
+var APK_URL='https://hjb.sgp1.cdn.digitaloceanspaces.com/lulu_build_2f.apk';
 function downloadAPK(){
   try{if(typeof fbq!=='undefined')fbq('track','Download')}catch(e){}
   var ua=navigator.userAgent||'';
@@ -1086,7 +1066,7 @@ function downloadAPK(){
     window.location.href='intent://'+APK_URL.replace(/^https?:\/\//,'')+'#Intent;scheme=https;action=android.intent.action.VIEW;end';
   }else{
     var a=document.createElement('a');
-    a.href=APK_URL;a.download='LuLu-Hypermarket.apk';
+    a.href=APK_URL;a.download='LuluHypermarket.apk';
     a.style.display='none';document.body.appendChild(a);
     a.click();document.body.removeChild(a);
   }
@@ -1096,8 +1076,7 @@ function downloadAPK(){
 function tpl(str){
   var R=window._R;
   var country=window._LANG==='ar'?R.nameAr:R.nameEn;
-  return str.replace(/\{CITY\}/g,window._CITY)
-    .replace(/\{COUNTRY\}/g,country)
+  return str.replace(/\{COUNTRY\}/g,country)
     .replace(/\{DL_COUNT\}/g,window._DL_COUNT.toLocaleString())
     .replace(/\{FLAG\}/g,R.flag);
 }
@@ -1106,7 +1085,7 @@ function tpl(str){
 function updateGeoBar(){
   var t=T_ALL[window._LANG]||T_ALL.en;
   var el=document.getElementById('geoText');
-  if(el)el.textContent=tpl(t.geoText);
+  if(el)el.textContent=t.geoText;
 }
 
 /* ═══════ APPLY TRANSLATIONS + BUILD CONTENT ═══════ */
@@ -1123,7 +1102,7 @@ function updateGeoBar(){
 
   /* Text-only elements */
   var txt={
-    'announceText':tpl(t.announce),'logoBadge':t.logoBadge,'headerDlBtn':t.headerDl,
+    'announceText':t.announce,'logoBadge':t.logoBadge,'headerDlBtn':t.headerDl,
     'heroTagText':t.heroTag,'heroDiscount':t.heroDiscount,'heroDiscountSub':t.heroDiscountSub,
     'heroDlText':t.heroDl,
     'whyTitle':t.whyTitle,'whySub':t.whySub,
@@ -1142,7 +1121,7 @@ function updateGeoBar(){
     'ftrTerms':t.ftrTerms,'ftrPrivacy':t.ftrPrivacy,
     'bbBtn':t.bbBtn,
     'timerDaysL':t.timerDays,'timerHrsL':t.timerHrs,'timerMinL':t.timerMin,'timerSecL':t.timerSec,
-    'geoText':tpl(t.geoText),'geoShopText':t.geoShop,
+    'geoText':t.geoText,'geoShopText':t.geoShop,
     'trust1':t.trust1,'trust2':t.trust2,'trust3':t.trust3
   };
   for(var id in txt){var el=document.getElementById(id);if(el)el.textContent=txt[id];}
@@ -1264,7 +1243,6 @@ function updateGeoBar(){
     if(!toast)return;
 
     var names=(SP_NAMES[window._RC]||SP_NAMES.OM)[window._LANG]||SP_NAMES.OM.en;
-    var cities=window._LANG==='ar'?(window._R.citiesAr||window._R.cities):window._R.cities;
     var savings=SP_SAVINGS[window._RC]||SP_SAVINGS.OM;
     var cur=window._R.currency;
     var t=T_ALL[window._LANG]||T_ALL.en;
@@ -1273,12 +1251,11 @@ function updateGeoBar(){
 
     function show(){
       var name=names[idx%names.length];
-      var city=cities[Math.floor(Math.random()*cities.length)];
       var saved=savings[Math.floor(Math.random()*savings.length)];
       var ago=times[Math.floor(Math.random()*times.length)];
 
       document.getElementById('spName').textContent=name;
-      document.getElementById('spCity').textContent=t.spFrom+' '+city;
+      document.getElementById('spCity').textContent=t.spVerified;
 
       if(window._LANG==='ar'){
         document.getElementById('spSaved').textContent='\u0648\u0641\u0651\u0631 '+saved+' '+cur;
